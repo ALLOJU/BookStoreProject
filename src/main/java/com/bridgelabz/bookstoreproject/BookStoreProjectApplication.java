@@ -8,6 +8,7 @@ public class BookStoreProjectApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(BookStoreProjectApplication.class, args);
+        System.out.println("Book Store Application");
     }
 
 }
