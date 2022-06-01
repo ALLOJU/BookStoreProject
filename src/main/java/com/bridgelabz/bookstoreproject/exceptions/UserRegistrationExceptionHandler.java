@@ -20,7 +20,7 @@ public class UserRegistrationExceptionHandler {
         List<String> errorMessage = errorList.stream().map(objerr -> objerr.getDefaultMessage())
                 .collect(Collectors.toList());
 
-        ResponseDto responseDTO = new ResponseDto("Exception while processing REST request", errorMessage);
+        ResponseDto responseDTO = new ResponseDto("Exception while processing REST request", errorMessage,null);
         return new ResponseEntity<ResponseDto>(responseDTO, HttpStatus.BAD_REQUEST);
     }
 
@@ -28,7 +28,7 @@ public class UserRegistrationExceptionHandler {
     public ResponseEntity<ResponseDto> handleEmployeePayrollException(
             UserRegistrationException exception) {
         ResponseDto responseDTO = new ResponseDto("Exception while REST Request",
-                exception.getMessage());
+                exception.getMessage(),null);
         return new ResponseEntity<ResponseDto>(responseDTO, HttpStatus.BAD_REQUEST);
     }
 }

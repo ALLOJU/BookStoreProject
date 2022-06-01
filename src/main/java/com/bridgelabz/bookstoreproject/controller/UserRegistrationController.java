@@ -24,21 +24,18 @@ public class UserRegistrationController {
     private IUserRegistrationService service;
 
 
-    @PostMapping("/register")
-    public ResponseEntity<ResponseDto> addUserRegistrationData(@Valid @RequestBody UserRegistrationDto userDTO) {
-        System.out.println("user registration");
-        UserRegistrationData userDetails = service.userRegistration(userDTO);
-        log.debug("User Registration input details: " + userDTO.toString());
-        ResponseDto response = new ResponseDto("Verification Mail Has Been Sent Successfully", userDetails);
-        return new ResponseEntity<ResponseDto>(response, HttpStatus.OK);
-    }
+
+@PostMapping("/register")
+public ResponseEntity<ResponseDto> createAccount(@RequestBody UserRegistrationDto userDto){
+    return service.userRegistration(userDto);
+}
 
     @GetMapping("/getAllUser")
     public ResponseEntity<ResponseDto> readdata() throws UserRegistrationException {
         List<UserRegistrationData> users = null;
         users = service.getAllUsersData();
         if (users.size() > 0) {
-            ResponseDto responseDTO = new ResponseDto("all user Fetched successfully", users);
+            ResponseDto responseDTO = new ResponseDto("all user Fetched successfully", users,null);
             return new ResponseEntity<>(responseDTO, HttpStatus.OK);
         } else {
             throw new UserRegistrationException("No Data Found");
@@ -50,7 +47,7 @@ public class UserRegistrationController {
         UserRegistrationData users = service.getUserById(userId);
 
         if (users!=null) {
-            ResponseDto responseDTO = new ResponseDto("User Fetched successfully", users);
+            ResponseDto responseDTO = new ResponseDto("User Fetched successfully", users,null);
             return new ResponseEntity<ResponseDto>(responseDTO, HttpStatus.OK);
         } else {
             throw new UserRegistrationException("No Data Found");
@@ -61,7 +58,7 @@ public class UserRegistrationController {
     public ResponseEntity<ResponseDto> updateContactData(@PathVariable("userId") int userId,
                                                          @Valid @RequestBody UserRegistrationDto userDTO) {
         UserRegistrationData userData = service.updateUser(userId, userDTO);
-        ResponseDto response = new ResponseDto("Updated user data for", userData);
+        ResponseDto response = new ResponseDto("Updated user data for", userData,null);
         return new ResponseEntity<ResponseDto>(response, HttpStatus.OK);
 
     }
@@ -71,7 +68,7 @@ public class UserRegistrationController {
         userData = service.getUserByEmailId(emailId);
 
         if (userData != null) {
-            ResponseDto response = new ResponseDto("Get Call Users List By email is Successful", userData);
+            ResponseDto response = new ResponseDto("Get Call Users List By email is Successful", userData,null);
             return new ResponseEntity<ResponseDto>(response, HttpStatus.OK);
         } else {
             log.info("email id block");
@@ -81,15 +78,11 @@ public class UserRegistrationController {
     }
     @PostMapping("/login")
     public ResponseEntity<ResponseDto> userLogin(@RequestBody LoginDto logindto) {
-        Optional<UserRegistrationData> login = service.UserLogin(logindto);
-        if (login != null) {
-            ResponseDto dto = new ResponseDto("LOGIN SUCCESSFUL", login);
-            return new ResponseEntity<>(dto, HttpStatus.ACCEPTED);
-        } else {
-            ResponseDto dto = new ResponseDto("User login not successfully", login);
-            return new ResponseEntity<>(dto, HttpStatus.ACCEPTED);
-        }
+        return service.loginUser(logindto);
     }
-
+    @GetMapping("/verify/{token}")
+    public ResponseEntity<ResponseDto> verifyUser(@PathVariable String token) {
+        return service.verify(token);
+    }
 
 }

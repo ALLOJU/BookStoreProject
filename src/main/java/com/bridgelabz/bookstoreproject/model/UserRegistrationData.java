@@ -24,6 +24,8 @@ public @Data class UserRegistrationData {
     @Column
     private String password;
 
+    public boolean verified;
+
     public UserRegistrationData() {
     }
 
@@ -38,6 +40,13 @@ public @Data class UserRegistrationData {
         this.address=userDTO.address;
         this.password = userDTO.password;
 
+    }
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
+
+    public boolean getVerified() {
+        return verified;
     }
 
 }

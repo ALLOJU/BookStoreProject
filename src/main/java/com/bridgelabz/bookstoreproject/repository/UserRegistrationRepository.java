@@ -17,4 +17,6 @@ public interface UserRegistrationRepository extends JpaRepository<UserRegistrati
     UserRegistrationData findUserListByEmail(String emailId);
 
     Optional<UserRegistrationData> findByEmailIdAndPassword(String emailId, String password);
+
+    Optional<UserRegistrationData> findUserRegistrationDataByEmailId(String emailId);
 }
