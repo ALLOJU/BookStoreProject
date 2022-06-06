@@ -21,15 +21,30 @@ import java.util.Optional;
 @RequestMapping("/userregistration")
 public class UserRegistrationController {
     @Autowired
+    /**
+     * here injecting dependency from UserRegistration service to UserRegistration Controller
+     * using @Autowired annotation
+     */
     private IUserRegistrationService service;
 
 
-
-@PostMapping("/register")
+    /**
+     * This method will call the service layer to insert a new record into the db. It will return an error message if the
+     *  address record to be inserted has any invalid fields.
+     *  here it takes values from userDto and by using servicelayer insert records ro repository layer
+     * @param userDto - input parameter for insert data
+     * @return -it returns json data with message and data.
+     */
+    @PostMapping("/register")
 public ResponseEntity<ResponseDto> createAccount(@RequestBody UserRegistrationDto userDto){
     return service.userRegistration(userDto);
 }
 
+    /**
+     * getAllUser - get all details of the user from the database using service layer
+     * @return - it returns list of users
+     * @throws UserRegistrationException - throws exception when users list is empty
+     */
     @GetMapping("/getAllUser")
     public ResponseEntity<ResponseDto> readdata() throws UserRegistrationException {
         List<UserRegistrationData> users = null;
@@ -41,6 +56,13 @@ public ResponseEntity<ResponseDto> createAccount(@RequestBody UserRegistrationDt
             throw new UserRegistrationException("No Data Found");
         }
     }
+
+    /**
+     * getUserData - this method used to get the userdetails based on the given user id given by
+     * path.this method used getMapping to get data from database.
+     * @param userId- here we passing userid from the uri using @Pathvariable annotation.
+     * @return - returns specific userdata based on userid.
+     */
     @GetMapping("/get/{userId}")
     public ResponseEntity<ResponseDto> getUserData(@PathVariable("userId") int userId){
 
@@ -54,14 +76,27 @@ public ResponseEntity<ResponseDto> createAccount(@RequestBody UserRegistrationDt
         }
     }
 
-    @PutMapping("/update/{userId}")
-    public ResponseEntity<ResponseDto> updateContactData(@PathVariable("userId") int userId,
+    /**
+     * updateContactData- this method is used to update user data which is taken from userDto class.
+     * @param userId -userid of specific user for updating its details.
+     * @param token - instead of userid we can also pass token for updating data.
+     * @param userDTO - dto class for giving data
+     * @return -returns updated data for entered userid.
+     */
+    @PutMapping("/update/{userId}/{token}")
+    public ResponseEntity<ResponseDto> updateContactData(@PathVariable("userId") int userId,@PathVariable("token") String token,
                                                          @Valid @RequestBody UserRegistrationDto userDTO) {
-        UserRegistrationData userData = service.updateUser(userId, userDTO);
-        ResponseDto response = new ResponseDto("Updated user data for", userData,null);
+        UserRegistrationData userData = service.updateUser(token,userId, userDTO);
+        ResponseDto response = new ResponseDto("Updated user data for", userData,token);
         return new ResponseEntity<ResponseDto>(response, HttpStatus.OK);
 
     }
+
+    /**
+     * getUsersByEmail - list out the user details for a particular email id
+     * @param emailId - input for getting user details of particular email.
+     * @return - returns user data.
+     */
     @GetMapping("/email/{emailId}")
     public ResponseEntity<ResponseDto> getUsersByEmail(@PathVariable String emailId) {
         UserRegistrationData userData = null;
@@ -76,10 +111,22 @@ public ResponseEntity<ResponseDto> createAccount(@RequestBody UserRegistrationDt
             throw new UserRegistrationException("No Data Found");
         }
     }
+
+    /**
+     * userLogin - controller for user login,here we passing login data
+     * @param logindto - as input parameter
+     * @return
+     */
     @PostMapping("/login")
     public ResponseEntity<ResponseDto> userLogin(@RequestBody LoginDto logindto) {
         return service.loginUser(logindto);
     }
+
+    /**
+     * verifyUser- method to verify specific user
+     * @param token - input for the user to verify
+     * @return -it returns whether user has verified or not.
+     */
     @GetMapping("/verify/{token}")
     public ResponseEntity<ResponseDto> verifyUser(@PathVariable String token) {
         return service.verify(token);

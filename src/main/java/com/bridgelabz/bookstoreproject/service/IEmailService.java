@@ -9,4 +9,5 @@ public interface IEmailService {
     public ResponseEntity<ResponseDto> sendMail(Email email);
 
     public String getLink(String token);
+    public String getOrder(String token);
 }

@@ -34,4 +34,7 @@ public class Email {
     public void setBody(String body) {
         this.body = body;
     }
+
+    public Email(String to, String subject) {
+    }
 }

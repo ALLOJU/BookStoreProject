@@ -64,4 +64,9 @@ public class EmailService implements  IEmailService{
     public String getLink(String token) {
         return "http://localhost:8081/userregistration/verify/" + token;
     }
+
+    @Override
+    public String getOrder(String token) {
+        return "http://localhost:8081/order/verify/" + token;
+    }
 }

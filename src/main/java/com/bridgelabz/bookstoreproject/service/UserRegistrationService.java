@@ -26,6 +26,15 @@ public class UserRegistrationService implements  IUserRegistrationService{
 
     @Autowired
     IEmailService emailService;
+
+    /**
+     * userRegistration - this method is used to save data into database using save method in
+     * user repository
+     * it also used to generate token for given userid for provide security  using JWT.
+     * and also send mail to user with the verification message using JMS.
+     * @param userDto  - input parameter to pass data.
+     * @return - it returns inserted data with user details.
+     */
     @Override
     public ResponseEntity<ResponseDto> userRegistration(UserRegistrationDto userDto) {
 
@@ -39,6 +48,11 @@ public class UserRegistrationService implements  IUserRegistrationService{
         return new ResponseEntity<>(responseDto,HttpStatus.OK);
     }
 
+    /**
+     * verify - this method is used to verify data whether it false or true.
+     * @param token - token for verification of user id.
+     * @return - returns verification message with the token.
+     */
     @Override
     public ResponseEntity<ResponseDto> verify(String token) {
         Optional<UserRegistrationData> user=userRepo.findById(tokenUtil.decodeToken(token));
@@ -52,12 +66,24 @@ public class UserRegistrationService implements  IUserRegistrationService{
         return new ResponseEntity<ResponseDto>(responseDTO, HttpStatus.OK);
     }
 
+    /**
+     * getAllUsersData - this method is used get all details of the users using findAll()
+     * method of the JPA repository.
+     * @return - lists out all the users details.
+     */
     @Override
     public List<UserRegistrationData> getAllUsersData() {
         List<UserRegistrationData> usersList = userRepo.findAll();
         return usersList;
     }
 
+    /**
+     * getUserById - get details of the specific userid using findById() of the
+     * JPA repository. if the userid is not found in the database then it throws Exception as
+     * given userid not found using exception handler method.
+     * @param userId - user id of the given particular user.
+     * @return -returns user data for the specific user
+     */
     @Override
     public UserRegistrationData getUserById(int userId) {
         System.out.println("Userid:" +userId);
@@ -66,18 +92,37 @@ public class UserRegistrationService implements  IUserRegistrationService{
 
     }
 
+    /**
+     * updateUser - it updates the user details which are taken from dto class
+     * @param token - input token
+     * @param userId
+     * @param userDTO
+     * @return
+     */
     @Override
-    public UserRegistrationData updateUser(int userId, UserRegistrationDto userDTO) {
+    public UserRegistrationData updateUser(String token,int userId, UserRegistrationDto userDTO) {
         UserRegistrationData userData = this.getUserById(userId);
         userData.updateUser(userDTO);
         return userRepo.save(userData);
     }
 
+    /**
+     * getUserByEmailId - get the user details for the particular user id with  findUserListByEmail
+     * using query provided in repo.
+     * @param emailId
+     * @return
+     */
     @Override
     public UserRegistrationData getUserByEmailId(String emailId) {
         return userRepo.findUserListByEmail(emailId);
     }
 
+    /**
+     * loginUser - it checks the email id and password of the user.if the details are correct
+     * then login successfully other given message with login failed.
+     * @param logindto
+     * @return
+     */
     @Override
     public ResponseEntity<ResponseDto> loginUser(LoginDto logindto) {
         Optional<UserRegistrationData> user=userRepo.findUserRegistrationDataByEmailId(logindto.getEmailId());

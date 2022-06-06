@@ -16,6 +16,12 @@ public class ResponseDto {
         this.data = data;
         this.token=token;
     }
+    public ResponseDto(String message, Object data) {
+        this.message = message;
+        this.data = data;
+    }
 
 
+    public ResponseDto(String all_items_deleted_from_cart) {
+    }
 }

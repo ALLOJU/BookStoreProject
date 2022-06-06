@@ -24,4 +24,6 @@ public interface IBookDetailsService {
     List<BookDetails> sortBookByDesc();
 
     BookDetails updateBookQuantity(int bookId, int bookQuantity);
+
+    BookDetails getBookByAuthorName(String bookAuthor);
 }

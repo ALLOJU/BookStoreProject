@@ -18,4 +18,6 @@ public interface BookDetailsRepository extends CrudRepository<BookDetails,Intege
     List<BookDetails> sortBookAsc();
     @Query(value = "SELECT * FROM books order by book_price DESC ", nativeQuery = true)
     List<BookDetails> sortBookDesc();
+
+    Optional<Object> findByBookAuthor(String bookAuthor);
 }
